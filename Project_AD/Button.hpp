@@ -15,7 +15,7 @@ public:
 
 		text.setString(btnText);
 		text.setCharacterSize(charSize);
-		text.setColor(textColor);
+		text.setFillColor(textColor);
 	}
 
 	// Pass font by reference:
@@ -28,7 +28,7 @@ public:
 	}
 
 	void setTextColor(sf::Color color) {
-		text.setColor(color);
+		text.setFillColor(color);
 	}
 
 	void setPosition(sf::Vector2f point) {

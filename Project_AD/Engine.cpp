@@ -2,9 +2,8 @@
 
 
 
-Engine_mod::Engine::Engine() {
-	//Вставишь сюда ссылку 
-	m_Window->create(sf::VideoMode(600, 600), "KekWait");
+Engine_mod::Engine::Engine(sf::RenderWindow* window) {
+	m_Window = window;
 
 }
 
@@ -43,7 +42,7 @@ void Engine_mod::Engine::update() {
 }
 void Engine_mod::Engine::draw() {
 	m_Window->clear(sf::Color::Black);
-//	m_Window->draw();
+	//m_Window->draw();
 	m_Window->display();
 
 }
