@@ -1,9 +1,7 @@
-#include <SFML/Graphics.hpp>
 
-using namespace sf;
+#include "Game.hpp"
 
-int main()
-{
-
-
+int main() {
+	Game game;
+	game.Start();
 }

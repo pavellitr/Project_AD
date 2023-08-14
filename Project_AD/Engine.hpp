@@ -7,7 +7,7 @@ namespace Engine_mod {
 	class Engine
 	{
 	public:
-		Engine();
+		Engine(sf::RenderWindow* window);
 		void start();
 
 	private:
