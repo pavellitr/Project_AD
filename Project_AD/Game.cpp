@@ -88,7 +88,7 @@ void Game::menu() {
             break;
         case sf::Event::MouseButtonPressed:
             if (start->isMouseOver(m_Window)) {
-                std::cout << "Hello " << "\n";
+                startEngine();
             }
             else if (escape->isMouseOver(m_Window)) {
                 m_Window.close();
