@@ -36,6 +36,7 @@ private:
 	void constructPause();
 	void drawPause();
 	bool paused;
+	bool escaped;
 	//////////////////////////////PAUSE
 
 

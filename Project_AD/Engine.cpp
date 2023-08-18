@@ -30,7 +30,9 @@ void Engine::start() {
 
 
 
-
+		if (escaped == true) {
+			break;
+		}
 		draw();
 	}
 }
@@ -97,7 +99,9 @@ void Engine::input(sf::Clock* clock) {
 					paused = false;
 				}
 				else if (escape->isMouseOver(*m_Window)) {
-					m_Window->close();
+					std::cout << "Hello World!" << std::endl;
+					escaped = true;
+
 				}
 				else if (save->isMouseOver(*m_Window)) {
 					std::cout << "Hello World!" << std::endl;
@@ -138,6 +142,7 @@ void Engine::constructPause() {
 
 
 	paused = false;
+	escaped = false;
 
 }
 
