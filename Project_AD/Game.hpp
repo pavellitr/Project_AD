@@ -14,7 +14,7 @@ public:
 private:
 
 	sf::RenderWindow m_Window;
-	Engine_mod::Engine* Engine;
+	Engine* engine;
 
 	void startEngine();
 
@@ -22,17 +22,17 @@ private:
 	sf::Texture* Background;
 	sf::Sprite* BackgroundSprite;
 	sf::Font font;
+
 	Button* start;
 	Button* escape;
+	Button* saves;
 
 	void constructMenu();
 	void menu();
 	void drawMenu();
 	////////////////////////////  MENU
 
-	void input();
-	void update();
-	void draw();
+
 
 
 
