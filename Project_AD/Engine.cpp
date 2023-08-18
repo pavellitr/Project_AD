@@ -27,12 +27,10 @@ void Engine::start() {
 		}
 
 
-
-
-
 		if (escaped == true) {
 			break;
 		}
+		
 		draw();
 	}
 }
