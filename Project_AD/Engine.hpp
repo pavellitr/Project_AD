@@ -2,7 +2,7 @@
 //#include "SFML/Graphics.hpp"
 #include "SFML/System.hpp"
 #include "Button.hpp"
-
+#include "Player.hpp"
 
 
 class Engine
@@ -17,8 +17,11 @@ private:
 	sf::Texture* Background;
 	sf::Sprite* BackgroundSprite;
 
-	TileMap lvl;
+	sf::Image heroImage;
 
+	TileMap* lvl;
+	Player* p;
+	float time;
 
 	void input(sf::Clock* clock);
 	void update();

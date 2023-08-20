@@ -12,23 +12,37 @@ Engine::Engine(sf::RenderWindow* window) {
 	BackgroundSprite->setTexture(*Background);
 
 	
-
-	lvl.load("map2.tmx");
+	lvl = new TileMap;
+	lvl->load("map2.tmx");
 	constructPause();
+
+	
+	
+	heroImage.loadFromFile("Resourses\\images\\Head.png");
+
+	Object player = lvl->getObject("player");
+	p = new Player (heroImage, "Player1", lvl, 500, 500, 40, 40);
+	
 
 }
 
 void Engine::start() {
 
 	sf::Clock clockinput;
+	sf::Clock Clock;
 	while (m_Window->isOpen()) {
-		
-		input(&clockinput);
+		float time = Clock.getElapsedTime().asMicroseconds();
 
+		Clock.restart();
+		input(&clockinput);
+		
+		time = time / 800;
+		
 		if (paused == false) {
 			//игру писать здесь
 
-
+			p->update(time);
+			
 		}
 
 
@@ -42,14 +56,15 @@ void Engine::start() {
 
 
 void Engine::update() {
-	
+	p->update(time);
 
 }
 void Engine::draw() {
 	m_Window->clear(sf::Color::Black);
 	m_Window->draw(*BackgroundSprite);
-
-	m_Window->draw(lvl);
+	
+	m_Window->draw(*lvl);
+	m_Window->draw(p->sprite);
 
 	if (paused == true) {
 		drawPause();

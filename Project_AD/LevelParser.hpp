@@ -1,6 +1,7 @@
 ﻿#pragma once
 #define _CRT_SECURE_NO_WARNINGS
 
+
 #include "SFML/Graphics.hpp"
 #include "tinyxml2.h"
 #include <iostream>
