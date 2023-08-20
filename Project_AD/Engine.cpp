@@ -11,6 +11,9 @@ Engine::Engine(sf::RenderWindow* window) {
 	BackgroundSprite = new sf::Sprite;
 	BackgroundSprite->setTexture(*Background);
 
+	
+
+	lvl.load("map2.tmx");
 	constructPause();
 
 }
@@ -24,6 +27,8 @@ void Engine::start() {
 
 		if (paused == false) {
 			//игру писать здесь
+
+
 		}
 
 
@@ -43,9 +48,14 @@ void Engine::update() {
 void Engine::draw() {
 	m_Window->clear(sf::Color::Black);
 	m_Window->draw(*BackgroundSprite);
+
+	m_Window->draw(lvl);
+
 	if (paused == true) {
 		drawPause();
 	}
+	
+
 	m_Window->display();
 
 }

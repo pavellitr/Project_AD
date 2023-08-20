@@ -1,7 +1,8 @@
 #pragma once
-#include "SFML/Graphics.hpp"
+//#include "SFML/Graphics.hpp"
 #include "SFML/System.hpp"
 #include "Button.hpp"
+#include "level.hpp"
 
 
 class Engine
@@ -16,8 +17,7 @@ private:
 	sf::Texture* Background;
 	sf::Sprite* BackgroundSprite;
 
-
-
+	TileMap lvl;
 
 
 	void input(sf::Clock* clock);
