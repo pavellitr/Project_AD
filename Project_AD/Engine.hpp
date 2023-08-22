@@ -2,7 +2,9 @@
 //#include "SFML/Graphics.hpp"
 #include "SFML/System.hpp"
 #include "Button.hpp"
-#include "LevelParser.hpp"
+#include "Player.hpp"
+#include "Level_buffer.hpp"
+
 
 
 
@@ -18,8 +20,13 @@ private:
 	sf::Texture* Background;
 	sf::Sprite* BackgroundSprite;
 
-	TileMap lvl;
+	sf::Image heroImage;
 
+	LevelBuffer* levels;
+		 
+	TileMap* lvl;
+	Player* p;
+	float time;
 
 	void input(sf::Clock* clock);
 	void update();

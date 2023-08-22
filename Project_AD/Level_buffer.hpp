@@ -1,31 +1,34 @@
 #pragma once
 
 #include <vector>
-#include "Level.hpp"
+#include "LevelParser.hpp"
 
 class LevelBuffer
 {
 public:
-	LevelBuffer();
-	Level* BringLevel(int num);
+	inline LevelBuffer();
+	inline TileMap* BringLevel(int num);
 
 
 
 private:
-	std::vector <Level*> LevelBuf;
+	std::vector <TileMap*> LevelBuf;
 
 };
 
 LevelBuffer::LevelBuffer()
 {
 	//пока есть файлы уровней{
-		//Level* level = new Level();
-		//LevelBuf.pushback(level)
+		TileMap* level = new TileMap;
+		level->load("map2.tmx");
+		LevelBuf.push_back(level);
 
 
 
 }
 
-Level* LevelBuffer::BringLevel(int num){ //чтобы запускать конкретный уровень
+TileMap* LevelBuffer::BringLevel(int num){ //чтобы запускать конкретный уровень
+
+
 	return LevelBuf[num - 1];
 	}
