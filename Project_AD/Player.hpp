@@ -1,5 +1,9 @@
 #pragma once
 
+#ifndef LEVELPARSER
+#define LEVELPARSER
+
+
 #include <SFML/Graphics.hpp>
 
 #include <iostream>
@@ -40,8 +44,8 @@ public:
 
 	Player(sf::Image& image, sf::String Name, TileMap* lev, float X, float Y, int W, int H) :Entity(image, Name, X, Y, W, H) {
 		playerScore = 0; state = stay; obj = lev->getAllObjects();//инициализируем.получаем все объекты для взаимодействия персонажа с картой
-		if (name == "Player1") {
-			//sprite.setTextureRect(IntRect(220, 444, w, h));
+		if (name == "player") {
+		//	sprite.setTextureRect(sf::IntRect(0, 40, w, h));
 		}
 	}
 
@@ -109,3 +113,4 @@ public:
 	}
 };
 
+#endif // !LEVELPARSER

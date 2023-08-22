@@ -11,17 +11,16 @@ Engine::Engine(sf::RenderWindow* window) {
 	BackgroundSprite = new sf::Sprite;
 	BackgroundSprite->setTexture(*Background);
 
+	levels = new LevelBuffer;
 	
-	lvl = new TileMap;
-	lvl->load("map2.tmx");
 	constructPause();
 
 	
 	
 	heroImage.loadFromFile("Resourses\\images\\Head.png");
 
-	Object player = lvl->getObject("player");
-	p = new Player (heroImage, "Player1", lvl, 500, 500, 40, 40);
+	//Object player = lvl->getObject("player");
+	p = new Player (heroImage, "Player1", levels->BringLevel(1), 500, 500, 40, 40);
 	
 
 }
@@ -63,7 +62,7 @@ void Engine::draw() {
 	m_Window->clear(sf::Color::Black);
 	m_Window->draw(*BackgroundSprite);
 	
-	m_Window->draw(*lvl);
+	m_Window->draw(*levels->BringLevel(1));
 	m_Window->draw(p->sprite);
 
 	if (paused == true) {

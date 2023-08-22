@@ -3,6 +3,7 @@
 #include "SFML/System.hpp"
 #include "Button.hpp"
 #include "Player.hpp"
+#include "Level_buffer.hpp"
 
 
 class Engine
@@ -19,6 +20,8 @@ private:
 
 	sf::Image heroImage;
 
+	LevelBuffer* levels;
+		 
 	TileMap* lvl;
 	Player* p;
 	float time;
