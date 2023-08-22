@@ -4,6 +4,8 @@
 #include "Button.hpp"
 #include "Player.hpp"
 #include "Level_buffer.hpp"
+#include <iostream>
+#include <list>
 
 
 class Engine
@@ -20,9 +22,16 @@ private:
 
 	sf::Image heroImage;
 
+	sf::Image BulletImage;
+	Bullet* bul;
+	
+
+	std::list<Entity*>  entities;
+	std::list<Entity*>::iterator it;
+
 	LevelBuffer* levels;
 		 
-	TileMap* lvl;
+	
 	Player* p;
 	float time;
 

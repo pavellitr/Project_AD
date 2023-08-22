@@ -15,31 +15,45 @@ Engine::Engine(sf::RenderWindow* window) {
 	
 	constructPause();
 
-	
-	
 	heroImage.loadFromFile("Resourses\\images\\Head.png");
+	BulletImage.loadFromFile("Resourses\\images\\bullet.png");
+
 
 	//Object player = lvl->getObject("player");
 	p = new Player (heroImage, "Player1", levels->BringLevel(1), 500, 500, 40, 40);
-	
 
+	
+	
+	
 }
 
 void Engine::start() {
 
 	sf::Clock clockinput;
 	sf::Clock Clock;
+	sf::Clock CDtimer;
 	while (m_Window->isOpen()) {
 		float time = Clock.getElapsedTime().asMicroseconds();
-
+		float CD = CDtimer.getElapsedTime().asMicroseconds();
 		Clock.restart();
 		input(&clockinput);
-		
+		CD = CD / 100000;
 		time = time / 800;
-		
+
 		if (paused == false) {
 			//игру писать здесь
+			if (p->isShoot == true && CD > 2) {
+				p->isShoot = false; entities.push_back(new Bullet(BulletImage, "Bullet", levels->BringLevel(1), p->x, p->y, 16, 16, p->state));
+				CDtimer.restart();
 
+			}
+			for (it = entities.begin(); it != entities.end();)
+			{
+				Entity* b = *it;
+				b->update(time);
+				if (b->life == false) { it = entities.erase(it); delete b; }
+				else it++;
+			}
 			p->update(time);
 			
 		}
@@ -55,6 +69,8 @@ void Engine::start() {
 
 
 void Engine::update() {
+	
+
 	p->update(time);
 
 }
@@ -62,8 +78,16 @@ void Engine::draw() {
 	m_Window->clear(sf::Color::Black);
 	m_Window->draw(*BackgroundSprite);
 	
+
+
 	m_Window->draw(*levels->BringLevel(1));
+
+
+	for (it = entities.begin(); it != entities.end(); it++) {
+		m_Window->draw((*it)->sprite);
+	}
 	m_Window->draw(p->sprite);
+
 
 	if (paused == true) {
 		drawPause();

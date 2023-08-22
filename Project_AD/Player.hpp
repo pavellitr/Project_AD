@@ -35,12 +35,14 @@ public:
 	sf::FloatRect getRect() {//ф-ция получения прямоугольника. его коорд,размеры (шир,высот).
 		return sf::FloatRect(x, y, w, h);//эта ф-ция нужна для проверки столкновений 
 	}
+	virtual void update(float time) = 0;
 };
 ////////////////////////////////////////////////////КЛАСС ИГРОКА////////////////////////
 class Player :public Entity {
 public:
-	enum { left, right, up, down, jump, stay } state;
+	enum { left, right, up, down, jump, stay, right_Top, left_Top } state;
 	int playerScore;
+	bool isShoot;
 
 	Player(sf::Image& image, sf::String Name, TileMap* lev, float X, float Y, int W, int H) :Entity(image, Name, X, Y, W, H) {
 		playerScore = 0; state = stay; obj = lev->getAllObjects();//инициализируем.получаем все объекты для взаимодействия персонажа с картой
@@ -67,6 +69,17 @@ public:
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
 			state = down;
 
+		}
+		if ((sf:: Keyboard::isKeyPressed(sf::Keyboard::Right)) && (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))) {
+			state = right_Top;
+		}
+
+		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) && (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))) {
+			state = left_Top;
+		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+			isShoot = true;
 		}
 	}
 
@@ -98,6 +111,8 @@ public:
 		case up: break;
 		case down: dx = 0; break;
 		case stay: break;
+		case right_Top:dx = speed; break;
+		case left_Top:dx = -speed; break;
 		}
 		x += dx;
 		checkCollisionWithMap(dx, 0);
@@ -112,5 +127,56 @@ public:
 		dy = dy + 0.0015 * time;
 	}
 };
+
+
+class Bullet :public Entity {
+public:
+	int direction;
+
+	Bullet(sf::Image& image, sf::String Name, TileMap* lvl, float X, float Y, int W, int H, int dir) :Entity(image, Name, X, Y, W, H) {//всё так же, только взяли в конце состояние игрока (int dir)
+		obj = lvl->getObjectsByName("solid");
+		x = X;
+		y = Y;
+		direction = dir;
+		speed = 0.8;
+		w = h = 16;
+		life = true;
+		
+	}
+
+
+	void update(float time)
+	{
+		switch (direction)
+		{
+		case 0: dx = -speed; dy = 0;   break;
+		case 1: dx = speed; dy = 0;   break;
+		case 2: dx = 0; dy = -speed;   break;
+		case 3: dx = 0; dy = -speed;   break;
+		case 4: dx = 0; dy = -speed;   break;
+		case 5: dx = 0; dy = -speed;   break;
+		case 6: dx = speed;  dy = -speed;   break;
+		case 7: dx = -speed; dy = -speed; break;
+
+		}
+
+		x += dx * time;
+		y += dy * time;
+
+		if (x <= 0) { x = 1; life = false; }
+		if (y <= 0) { y = 1; life = false; }
+
+		for (int i = 0; i < obj.size(); i++) {
+			if (getRect().intersects(obj[i].rect)) 
+			{
+				life = false;
+			}
+		}
+
+		sprite.setPosition(x + w / 2, y + h / 2);
+	}
+};
+
+
 
 #endif // !LEVELPARSER
