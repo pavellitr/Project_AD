@@ -31,4 +31,4 @@ TileMap* LevelBuffer::BringLevel(int num){ //чтобы запускать конкретный уровень
 
 
 	return LevelBuf[num - 1];
-	}
+}

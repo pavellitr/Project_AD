@@ -19,8 +19,9 @@ Engine::Engine(sf::RenderWindow* window) {
 	
 	heroImage.loadFromFile("Resourses\\images\\Head.png");
 
-	//Object player = lvl->getObject("player");
-	p = new Player (heroImage, "Player1", levels->BringLevel(1), 500, 500, 40, 40);
+	Object player = levels->BringLevel(1)->getObject("player");
+
+	p = new Player (heroImage, "Player1", levels->BringLevel(1), player.GetX(), player.GetY(), 40, 40);
 	
 
 }

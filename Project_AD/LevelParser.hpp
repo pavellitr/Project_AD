@@ -12,17 +12,24 @@ class Object
 public:
 	Object(float x, float y, float width, float height) : rect(x, y, width, height)
 	{
+		x_Place = x;
+		y_Place = y;
 
 	}
 
 	 int          GetPropertyInt(const std::string& name);
 	 float       GetPropertyFloat(const std::string& name);
 	 std::string  GetPropertyString(const std::string& name);
+	 float		GetX() { return x_Place; };
+	 float		GetY() { return y_Place; };
 
 	std::string name;
 	std::string type;
 	std::map<std::string, std::string> properties;
 	sf::FloatRect rect;
+	float x_Place;
+	float y_Place;
+
 };
 
 class TileMap : public sf::Drawable
