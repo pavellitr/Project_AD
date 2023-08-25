@@ -13,79 +13,61 @@
 #include "levelParser.hpp"
 
 
-
-class Entity {
+class Entity
+{
 public:
-	std::vector<Object> obj;//вектор объектов карты
-	float dx, dy, x, y, speed, moveTimer;
-	int w, h, health;
-	bool life, isMove, onGround;
-	sf::Texture texture;
-	sf::Sprite sprite;
-	sf::String name;
-	Entity(sf::Image& image, sf::String Name, float X, float Y, int W, int H) {
-		x = X; y = Y; w = W; h = H; name = Name; moveTimer = 0;
-		speed = 0; health = 100; dx = 0; dy = 0;
+	Entity(sf::Image& image, sf::String Name, sf::String Type, float X, float Y, int W, int H) {
+		x = X; y = Y; w = W; h = H; name = Name; type = Type; moveTimer = 0;
+		speed = 0; dx = 0; dy = 0;
 		life = true; onGround = false; isMove = false;
 		texture.loadFromImage(image);
 		sprite.setTexture(texture);
 		sprite.setOrigin(w / 2, h / 2);
-	}
+	};
 
+
+	std::vector <Object> objects;
+	float dx, dy, x, y, speed, moveTimer;
+	int w, h;
+	bool life, isMove, onGround;
+
+	sf::Texture texture;
+	sf::Sprite sprite;
+	sf::String name, type;
+	
 	sf::FloatRect getRect() {//ф-ция получения прямоугольника. его коорд,размеры (шир,высот).
 		return sf::FloatRect(x, y, w, h);//эта ф-ция нужна для проверки столкновений 
 	}
+
+	virtual void control() = 0;
 };
-////////////////////////////////////////////////////КЛАСС ИГРОКА////////////////////////
-class Player :public Entity {
+
+class Player : private Entity
+{
 public:
-	enum { left, right, up, down, jump, stay } state;
-	int playerScore;
-
-	Player(sf::Image& image, sf::String Name, TileMap* lev, float X, float Y, int W, int H) :Entity(image, Name, X, Y, W, H) {
-		playerScore = 0; state = stay; obj = lev->getAllObjects();//инициализируем.получаем все объекты для взаимодействия персонажа с картой
-		if (name == "player") {
-		//	sprite.setTextureRect(sf::IntRect(0, 40, w, h));
-		}
+	Player(sf::Image& image, sf::String Name, sf::String Type, TileMap* lev, float x, float y, int w, int h, int mp, int hp, int str, int dex, int integ) : Entity(image, Name, Type, x, y, w, h) {
+		this->hp = hp; this->mp = mp; this->integer = integ; this->dex = dex; this->maxmp = 17 * integer - 3 * this->str; this->maxhp = 35 * this->str + 6 * this->dex;
+		objects = lev->getAllObjects();
 	}
 
-	void control() {
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-			state = left;
-			speed = 0.3;
-
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-			state = right; speed = 0.3;
-		}
-
-		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) && (onGround)) {
-			state = jump; dy = -0.7; onGround = false;
-		}
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-			state = down;
-
-		}
+	int getInt() {
+		return integer;
 	}
 
+	int getDex() {
+		return dex;
+	}
 
+	int getStr() {
+		return str;
+	}
 
-	void checkCollisionWithMap(float Dx, float Dy)
-	{
+	int getHP() {
+		return hp;
+	}
 
-		for (int i = 0; i < obj.size(); i++)//проходимся по объектам
-			if (getRect().intersects(obj[i].rect))//проверяем пересечение игрока с объектом
-			{
-				if (obj[i].name == "solid")//если встретили препятствие
-				{
-					if (Dy > 0) { y = obj[i].rect.top - h;  dy = 0; onGround = true; }
-					if (Dy < 0) { y = obj[i].rect.top + obj[i].rect.height;   dy = 0; }
-					if (Dx > 0) { x = obj[i].rect.left - w; }
-					if (Dx < 0) { x = obj[i].rect.left + obj[i].rect.width; }
-				}
-			}
+	int getMP() {
+		return mp;
 	}
 
 	void update(float time)
@@ -105,12 +87,93 @@ public:
 
 		checkCollisionWithMap(0, dy);
 		sprite.setPosition(sf::Vector2f(x + w / 2, y + h / 2));
-		if (health <= 0) { life = false; }
+		if (hp <= 0) { life = false; }
 		if (!isMove) { speed = 0; }
 
 
 		dy = dy + 0.0015 * time;
 	}
+
+	sf::Sprite getSprite() {
+		return sprite;
+	}
+
+
+private:
+	enum { left, right, up, down, jump, stay } state;
+	int hp, maxhp, maxmp, mp, str, dex, integer;
+
+	void control() {
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+			state = left;
+			speed = 0.3;
+
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+			state = right; speed = 0.3;
+		}
+
+		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::W))) {
+			state = up;
+		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+			state = down;
+
+		}
+
+		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) && (onGround)) {
+			state = jump; dy = -0.7; onGround = false;
+		}
+	}
+
+	void checkCollisionWithMap(float Dx, float Dy)
+	{
+
+		for (int i = 0; i < objects.size(); i++)//проходимся по объектам
+			if (getRect().intersects(objects[i].rect))//проверяем пересечение игрока с объектом
+			{
+				if (objects[i].name == "solid")//если встретили препятствие
+				{
+					if (Dy > 0) { y = objects[i].rect.top - h;  dy = 0; onGround = true; }
+					if (Dy < 0) { y = objects[i].rect.top + objects[i].rect.height;   dy = 0; }
+					if (Dx > 0) { x = objects[i].rect.left - w; }
+					if (Dx < 0) { x = objects[i].rect.left + objects[i].rect.width; }
+				}
+			}
+	}
+
+
 };
+
+
+
+
+class NPC : private Entity
+{
+public:
+	NPC(sf::Image& image, sf::String Name, sf::String Type, TileMap* lev, float x, float y, int w, int h, int mp, int hp, int str, int dex, int integ) : Entity(image, Name, Type, x, y, w, h) {
+
+	}
+
+
+private:
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #endif // !LEVELPARSER

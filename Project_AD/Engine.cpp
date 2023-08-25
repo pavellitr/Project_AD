@@ -21,7 +21,7 @@ Engine::Engine(sf::RenderWindow* window) {
 
 	Object player = levels->BringLevel(1)->getObject("player");
 
-	p = new Player (heroImage, "Player1", levels->BringLevel(1), player.GetX(), player.GetY(), 40, 40);
+	p = new Player (heroImage, "Player1", "Player", levels->BringLevel(1), player.GetX(), player.GetY(), 40, 40, 100, 100, 5, 10, 25);
 	
 
 }
@@ -64,7 +64,7 @@ void Engine::draw() {
 	m_Window->draw(*BackgroundSprite);
 	
 	m_Window->draw(*levels->BringLevel(1));
-	m_Window->draw(p->sprite);
+	m_Window->draw(p->getSprite());
 
 	if (paused == true) {
 		drawPause();

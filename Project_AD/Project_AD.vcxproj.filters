@@ -33,9 +33,6 @@
     <ClCompile Include="LevelParser.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.hpp">
@@ -50,9 +47,6 @@
     <ClInclude Include="Level_buffer.hpp">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Player.hpp">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="Button.hpp">
       <Filter>Файлы заголовков\файлы библиотек</Filter>
     </ClInclude>
@@ -61,6 +55,9 @@
     </ClInclude>
     <ClInclude Include="tinyxml2.h">
       <Filter>Файлы заголовков\файлы библиотек</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.hpp">
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
