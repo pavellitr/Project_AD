@@ -21,6 +21,14 @@ private:
 	sf::Sprite* BackgroundSprite;
 
 	sf::Image heroImage;
+	sf::Image bulletImage;
+	
+
+	std::list<Entity*> entities;
+	std::list<Entity*>::iterator it;
+	
+
+	Bullet* bul;
 
 	LevelBuffer* levels;
 		 
