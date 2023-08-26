@@ -22,7 +22,7 @@ Engine::Engine(sf::RenderWindow* window) {
 
 	Object player = levels->BringLevel(1)->getObject("player");
 
-	
+
 	
 	
 	ItemsObjects = levels->BringLevel(1)->getObjectsByName("Item");
@@ -47,7 +47,7 @@ void Engine::start() {
 		time = time / 800;
 		
 		if (paused == false) {
-			//èãğó ïèñàòü çäåñü
+			//Ã¨Ã£Ã°Ã³ Ã¯Ã¨Ã±Ã Ã²Ã¼ Ã§Ã¤Ã¥Ã±Ã¼
 
 			if (p->getIsShoot() == true && CD > 500) {
 				p->setIsShoot(false); entities.push_back(new Bullet(bulletImage, "Bullet", levels->BringLevel(1), p->getX(), p->getY(), 16, 16, p->getState()));

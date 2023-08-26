@@ -18,7 +18,9 @@ class Entity
 {
 public:
 	Entity(sf::Image& image, sf::String Name, float X, float Y, int W, int H) {
-		x = X; y = Y; w = W; h = H; name = Name; moveTimer = 0;
+
+		x = X; y = Y; w = W; h = H; name = Name;
+
 		speed = 0; dx = 0; dy = 0;
 		life = true; onGround = false; isMove = false;
 		texture.loadFromImage(image);
@@ -28,10 +30,12 @@ public:
 
 
 	std::vector <Object> objects;
+
 	std::list<Item*> Items;
 	std::list<Item*>::iterator itItem;
 
-	float dx, dy, x, y, speed, moveTimer;
+	float dx, dy, x, y, speed;
+
 	int w, h;
 	bool life, isMove, onGround;
 
@@ -39,8 +43,8 @@ public:
 	sf::Sprite sprite;
 	sf::String name;
 	
-	sf::FloatRect getRect() {//ф-ция получения прямоугольника. его коорд,размеры (шир,высот).
-		return sf::FloatRect(x, y, w, h);//эта ф-ция нужна для проверки столкновений 
+	sf::FloatRect getRect() {//Гґ-Г¶ГЁГї ГЇГ®Г«ГіГ·ГҐГ­ГЁГї ГЇГ°ГїГ¬Г®ГіГЈГ®Г«ГјГ­ГЁГЄГ . ГҐГЈГ® ГЄГ®Г®Г°Г¤,Г°Г Г§Г¬ГҐГ°Г» (ГёГЁГ°,ГўГ»Г±Г®ГІ).
+		return sf::FloatRect(x, y, w, h);//ГЅГІГ  Гґ-Г¶ГЁГї Г­ГіГ¦Г­Г  Г¤Г«Гї ГЇГ°Г®ГўГҐГ°ГЄГЁ Г±ГІГ®Г«ГЄГ­Г®ГўГҐГ­ГЁГ© 
 	}
 
 	virtual void control() = 0;
@@ -50,8 +54,16 @@ public:
 class Player : private Entity
 {
 public:
+
 	Player(sf::Image& image, sf::String Name, std::list<Item*> items , TileMap* lev, float x, float y, int w, int h, int mp, int hp, int str, int dex, int integ) : Entity(image, Name, x, y, w, h) {
+
 		this->hp = hp; this->mp = mp; this->integer = integ; this->dex = dex; this->maxmp = 17 * integer - 3 * this->str; this->maxhp = 35 * this->str + 6 * this->dex;
+		if (hp > maxhp) {
+			hp = maxhp;
+		}
+		if (mp > maxmp) {
+			mp = maxmp;
+		}
 		objects = lev->getAllObjects();
 		Items = items;
 		std::list<Item*> Items;
@@ -160,6 +172,16 @@ private:
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 			state = right; speed = 0.3;
 		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+			state = left;
+			speed = 0.6;
+
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+			state = right;
+			speed = 0.6;
+
+		}
 
 		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::W))) {
 			state = up;
@@ -169,24 +191,28 @@ private:
 			state = down;
 
 		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) {
-			isShoot = true;
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+			isShoot = true; mp -= 5;
 
 		}
 
-		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) && (onGround)) {
+		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) && (onGround) && (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))) {
+			state = jump; dy = -1.4; onGround = false;
+		}
+		else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) && (onGround)) {
 			state = jump; dy = -0.7; onGround = false;
 		}
+
 	}
 
 	
 	void checkCollisionWithMap(float Dx, float Dy)
 	{
 
-		for (int i = 0; i < objects.size(); i++)//проходимся по объектам
-			if (getRect().intersects(objects[i].rect))//проверяем пересечение игрока с объектом
+		for (int i = 0; i < objects.size(); i++)//ГЇГ°Г®ГµГ®Г¤ГЁГ¬Г±Гї ГЇГ® Г®ГЎГєГҐГЄГІГ Г¬
+			if (getRect().intersects(objects[i].rect))//ГЇГ°Г®ГўГҐГ°ГїГҐГ¬ ГЇГҐГ°ГҐГ±ГҐГ·ГҐГ­ГЁГҐ ГЁГЈГ°Г®ГЄГ  Г± Г®ГЎГєГҐГЄГІГ®Г¬
 			{
-				if (objects[i].name == "solid")//если встретили препятствие
+				if (objects[i].name == "solid")//ГҐГ±Г«ГЁ ГўГ±ГІГ°ГҐГІГЁГ«ГЁ ГЇГ°ГҐГЇГїГІГ±ГІГўГЁГҐ
 				{
 					if (Dy > 0) { y = objects[i].rect.top - h;  dy = 0; onGround = true; }
 					if (Dy < 0) { y = objects[i].rect.top + objects[i].rect.height;   dy = 0; }
@@ -218,7 +244,9 @@ private:
 class NPC : private Entity
 {
 public:
+
 	NPC(sf::Image& image, sf::String Name, TileMap* lev, float x, float y, int w, int h, int mp, int hp, int str, int dex, int integ) : Entity(image, Name,  x, y, w, h) {
+
 
 	}
 
@@ -231,7 +259,9 @@ class Bullet : public Entity {
 public:
 	int direction;
 
-	Bullet(sf::Image& image, sf::String Name, TileMap * lvl, float X, float Y, int W, int H, int dir) :Entity(image, Name, X, Y, W, H) {//всё так же, только взяли в конце состояние игрока (int dir)
+
+	Bullet(sf::Image& image, sf::String Name, TileMap * lvl, float X, float Y, int W, int H, int dir) :Entity(image, Name, X, Y, W, H) {//ГўГ±Вё ГІГ ГЄ Г¦ГҐ, ГІГ®Г«ГјГЄГ® ГўГ§ГїГ«ГЁ Гў ГЄГ®Г­Г¶ГҐ Г±Г®Г±ГІГ®ГїГ­ГЁГҐ ГЁГЈГ°Г®ГЄГ  (int dir)
+
 		objects = lvl->getObjectsByName("solid");
 		x = X;
 		y = Y;

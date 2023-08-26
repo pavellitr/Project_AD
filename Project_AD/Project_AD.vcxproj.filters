@@ -59,7 +59,9 @@
     <ClInclude Include="Player.hpp">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+
     <ClInclude Include="Items.hpp">
+
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
