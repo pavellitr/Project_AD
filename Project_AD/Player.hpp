@@ -48,6 +48,12 @@ class Player : private Entity
 public:
 	Player(sf::Image& image, sf::String Name, TileMap* lev, float x, float y, int w, int h, int mp, int hp, int str, int dex, int integ) : Entity(image, Name, x, y, w, h) {
 		this->hp = hp; this->mp = mp; this->integer = integ; this->dex = dex; this->maxmp = 17 * integer - 3 * this->str; this->maxhp = 35 * this->str + 6 * this->dex;
+		if (hp > maxhp) {
+			hp = maxhp;
+		}
+		if (mp > maxmp) {
+			mp = maxmp;
+		}
 		objects = lev->getAllObjects();
 	}
 
@@ -131,6 +137,16 @@ private:
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 			state = right; speed = 0.3;
 		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+			state = left;
+			speed = 0.6;
+
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+			state = right;
+			speed = 0.6;
+
+		}
 
 		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::W))) {
 			state = up;
@@ -140,14 +156,18 @@ private:
 			state = down;
 
 		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) {
-			isShoot = true;
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+			isShoot = true; mp -= 5;
 
 		}
 
-		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) && (onGround)) {
+		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) && (onGround) && (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))) {
+			state = jump; dy = -1.4; onGround = false;
+		}
+		else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) && (onGround)) {
 			state = jump; dy = -0.7; onGround = false;
 		}
+
 	}
 
 	void checkCollisionWithMap(float Dx, float Dy)
@@ -188,7 +208,7 @@ class Bullet : public Entity {
 public:
 	int direction;
 
-	Bullet(sf::Image& image, sf::String Name,sf::String Type, TileMap * lvl, float X, float Y, int W, int H, int dir) :Entity(image, Name, Type , X, Y, W, H) {//всё так же, только взяли в конце состояние игрока (int dir)
+	Bullet(sf::Image& image, sf::String Name,sf::String Type, TileMap * lvl, float X, float Y, int W, int H, int dir) :Entity(image, Name, X, Y, W, H) {//всё так же, только взяли в конце состояние игрока (int dir)
 		objects = lvl->getObjectsByName("solid");
 		x = X;
 		y = Y;
