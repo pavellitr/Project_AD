@@ -11,13 +11,14 @@
 #include <vector>
 #include <list>
 #include "levelParser.hpp"
+#include "Items.hpp"
 
 
 class Entity
 {
 public:
-	Entity(sf::Image& image, sf::String Name, sf::String Type, float X, float Y, int W, int H) {
-		x = X; y = Y; w = W; h = H; name = Name; type = Type; moveTimer = 0;
+	Entity(sf::Image& image, sf::String Name, float X, float Y, int W, int H) {
+		x = X; y = Y; w = W; h = H; name = Name; moveTimer = 0;
 		speed = 0; dx = 0; dy = 0;
 		life = true; onGround = false; isMove = false;
 		texture.loadFromImage(image);
@@ -27,13 +28,16 @@ public:
 
 
 	std::vector <Object> objects;
+	std::list<Item*> Items;
+	std::list<Item*>::iterator itItem;
+
 	float dx, dy, x, y, speed, moveTimer;
 	int w, h;
 	bool life, isMove, onGround;
 
 	sf::Texture texture;
 	sf::Sprite sprite;
-	sf::String name, type;
+	sf::String name;
 	
 	sf::FloatRect getRect() {//ф-ция получения прямоугольника. его коорд,размеры (шир,высот).
 		return sf::FloatRect(x, y, w, h);//эта ф-ция нужна для проверки столкновений 
@@ -46,9 +50,11 @@ public:
 class Player : private Entity
 {
 public:
-	Player(sf::Image& image, sf::String Name, sf::String Type, TileMap* lev, float x, float y, int w, int h, int mp, int hp, int str, int dex, int integ) : Entity(image, Name, Type, x, y, w, h) {
+	Player(sf::Image& image, sf::String Name, std::list<Item*> items , TileMap* lev, float x, float y, int w, int h, int mp, int hp, int str, int dex, int integ) : Entity(image, Name, x, y, w, h) {
 		this->hp = hp; this->mp = mp; this->integer = integ; this->dex = dex; this->maxmp = 17 * integer - 3 * this->str; this->maxhp = 35 * this->str + 6 * this->dex;
 		objects = lev->getAllObjects();
+		Items = items;
+		std::list<Item*> Items;
 	}
 
 	int getInt() {
@@ -86,6 +92,16 @@ public:
 	void setIsShoot(bool flag) {
 		isShoot = flag;
 	}
+	int getPickUP() {
+		return pickUP;
+	}
+	void setPickUP(bool flag) {
+		pickUP= flag;
+	}
+	sf::Sprite getSprite() {
+		return sprite;
+	}
+
 
 	void update(float time)
 	{
@@ -103,6 +119,7 @@ public:
 		y += dy;
 
 		checkCollisionWithMap(0, dy);
+		checkCollisionsWithItems();
 		sprite.setPosition(sf::Vector2f(x + w / 2, y + h / 2));
 		if (hp <= 0) { life = false; }
 		if (!isMove) { speed = 0; }
@@ -111,16 +128,21 @@ public:
 		dy = dy + 0.0015 * time;
 	}
 
-	sf::Sprite getSprite() {
-		return sprite;
-	}
 
+	void PickUpItemStatsUP(int ID) {
+		switch (ID)
+		{
+		case 1:hp += 20; break;
+		}
+		
+
+	}
 
 private:
 	enum { left, right, up, down, jump, stay } state;
-	int hp, maxhp, maxmp, mp, str, dex, integer;
-	bool isShoot=false;
-
+	int hp=100, maxhp=100, maxmp=200, mp=200, str=10, dex=10, integer=10;
+	bool isShoot=false, pickUP=false;
+	
 	void control() {
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
@@ -150,6 +172,7 @@ private:
 		}
 	}
 
+	
 	void checkCollisionWithMap(float Dx, float Dy)
 	{
 
@@ -162,8 +185,21 @@ private:
 					if (Dy < 0) { y = objects[i].rect.top + objects[i].rect.height;   dy = 0; }
 					if (Dx > 0) { x = objects[i].rect.left - w; }
 					if (Dx < 0) { x = objects[i].rect.left + objects[i].rect.width; }
-				}
+				}	
 			}
+	}
+
+	void checkCollisionsWithItems() {
+		
+	 for (itItem = Items.begin(); itItem != Items.end();itItem++)
+		{
+		 Item* b = *itItem;
+			if (getRect().intersects(b->getRect())) {
+				
+				b->PickUped = true;
+				
+			}	
+		}
 	}
 
 
@@ -175,7 +211,7 @@ private:
 class NPC : private Entity
 {
 public:
-	NPC(sf::Image& image, sf::String Name, sf::String Type, TileMap* lev, float x, float y, int w, int h, int mp, int hp, int str, int dex, int integ) : Entity(image, Name, Type, x, y, w, h) {
+	NPC(sf::Image& image, sf::String Name, TileMap* lev, float x, float y, int w, int h, int mp, int hp, int str, int dex, int integ) : Entity(image, Name,  x, y, w, h) {
 
 	}
 
@@ -188,7 +224,7 @@ class Bullet : public Entity {
 public:
 	int direction;
 
-	Bullet(sf::Image& image, sf::String Name,sf::String Type, TileMap * lvl, float X, float Y, int W, int H, int dir) :Entity(image, Name, Type , X, Y, W, H) {//всё так же, только взяли в конце состояние игрока (int dir)
+	Bullet(sf::Image& image, sf::String Name, TileMap * lvl, float X, float Y, int W, int H, int dir) :Entity(image, Name, X, Y, W, H) {//всё так же, только взяли в конце состояние игрока (int dir)
 		objects = lvl->getObjectsByName("solid");
 		x = X;
 		y = Y;
@@ -223,20 +259,21 @@ public:
 		y += dy * time;
 
 		if (x <= 0) { x = 1; life = false; }
+		if (x >= 1920) { x = 1; life = false; }
 		if (y <= 0) { y = 1; life = false; }
 
 		for (int i = 0; i < objects.size(); i++) {
 			if (getRect().intersects(objects[i].rect))
 			{
+
 				life = false;
+
 			}
 		}
 
 		sprite.setPosition(x + w / 2, y + h / 2);
 	}
 };
-
-
 
 
 

@@ -145,6 +145,7 @@
     <ClInclude Include="Engine.hpp" />
     <ClInclude Include="Button.hpp" />
     <ClInclude Include="Game.hpp" />
+    <ClInclude Include="Items.hpp" />
     <ClInclude Include="Level_buffer.hpp" />
     <ClInclude Include="LevelParser.hpp" />
     <ClInclude Include="Player.hpp" />
