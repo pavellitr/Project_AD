@@ -72,9 +72,9 @@ void Engine::start() {
 					if (d->ItemID < 10) {  
 						p->PickUpItemStatsUP(d->ItemID);
 					}
-
+					
 					itItem = Items.erase(itItem); delete d;
-					std::cout << p->getHP() << std::endl;
+
 				}
 				else itItem++;
 

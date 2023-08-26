@@ -132,7 +132,14 @@ public:
 	void PickUpItemStatsUP(int ID) {
 		switch (ID)
 		{
-		case 1:hp += 20; break;
+		case 1:if((hp + 50) >= maxhp) { hp = maxhp; }
+			   if ((hp + 50) < maxhp) { hp = hp+50; }
+			     
+			  
+			  break;
+
+
+
 		}
 		
 
