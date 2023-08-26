@@ -22,9 +22,15 @@ Engine::Engine(sf::RenderWindow* window) {
 
 	Object player = levels->BringLevel(1)->getObject("player");
 
-	p = new Player (heroImage, "Player1", levels->BringLevel(1), player.GetX(), player.GetY(), 40, 40, 100, 100, 5, 10, 25);
-	
 
+	
+	
+	ItemsObjects = levels->BringLevel(1)->getObjectsByName("Item");
+	for (int i = 0; i < ItemsObjects.size(); i++) {
+		Items.push_back(new ItemStatsUp(ItemsObjects[i], ItemsObjects[i].GetPropertyInt("ID"), levels->BringLevel(1)));
+	}
+
+	p = new Player(heroImage, "Player1", Items, levels->BringLevel(1), player.GetX(), player.GetY(), 40, 40, 100, 100, 5, 10, 25);
 }
 
 void Engine::start() {
@@ -41,10 +47,10 @@ void Engine::start() {
 		time = time / 800;
 		
 		if (paused == false) {
-			//èãðó ïèñàòü çäåñü
+			//Ã¨Ã£Ã°Ã³ Ã¯Ã¨Ã±Ã Ã²Ã¼ Ã§Ã¤Ã¥Ã±Ã¼
 
 			if (p->getIsShoot() == true && CD > 500) {
-				p->setIsShoot(false); entities.push_back(new Bullet(bulletImage, "Bullet","bullet", levels->BringLevel(1), p->getX(), p->getY(), 16, 16, p->getState()));
+				p->setIsShoot(false); entities.push_back(new Bullet(bulletImage, "Bullet", levels->BringLevel(1), p->getX(), p->getY(), 16, 16, p->getState()));
 				CDTimer.restart();
 
 			}
@@ -54,8 +60,30 @@ void Engine::start() {
 				b->update(time);
 				if (b->life == false) { it = entities.erase(it); delete b; }
 				else it++;
-			}		
+			}	
+
 			p->update(time);
+
+			for (itItem = Items.begin(); itItem != Items.end();)
+			{
+				Item* d = *itItem;
+				if (d->PickUped==true) {
+					
+					if (d->ItemID < 10) {  
+						p->PickUpItemStatsUP(d->ItemID);
+					}
+					
+					itItem = Items.erase(itItem); delete d;
+
+				}
+				else itItem++;
+
+
+			}
+			
+			
+
+			
 			
 		}
 
@@ -81,6 +109,12 @@ void Engine::draw() {
 		m_Window->draw((*it)->sprite);
 
 	}
+	for (itItem = Items.begin(); itItem != Items.end(); itItem++) {
+		m_Window->draw(*(*itItem)->getSprite());
+
+	}
+
+	
 
 	m_Window->draw(*levels->BringLevel(1));
 	m_Window->draw(p->getSprite());

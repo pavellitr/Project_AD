@@ -14,14 +14,20 @@ public:
 	{
 		x_Place = x;
 		y_Place = y;
+		Width = width;
+		Height = height;
+
 
 	}
 
 	 int          GetPropertyInt(const std::string& name);
 	 float       GetPropertyFloat(const std::string& name);
 	 std::string  GetPropertyString(const std::string& name);
+
 	 float		GetX() { return x_Place; };
 	 float		GetY() { return y_Place; };
+	 float		GetWidth() { return Width; };
+	 float		GetHeight() { return Height; };
 
 	std::string name;
 	std::string type;
@@ -29,6 +35,8 @@ public:
 	sf::FloatRect rect;
 	float x_Place;
 	float y_Place;
+	float Width;
+	float Height;
 
 };
 
