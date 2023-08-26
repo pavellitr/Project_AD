@@ -16,8 +16,8 @@
 class Entity
 {
 public:
-	Entity(sf::Image& image, sf::String Name, sf::String Type, float X, float Y, int W, int H) {
-		x = X; y = Y; w = W; h = H; name = Name; type = Type; moveTimer = 0;
+	Entity(sf::Image& image, sf::String Name, float X, float Y, int W, int H) {
+		x = X; y = Y; w = W; h = H; name = Name;
 		speed = 0; dx = 0; dy = 0;
 		life = true; onGround = false; isMove = false;
 		texture.loadFromImage(image);
@@ -27,13 +27,13 @@ public:
 
 
 	std::vector <Object> objects;
-	float dx, dy, x, y, speed, moveTimer;
+	float dx, dy, x, y, speed;
 	int w, h;
 	bool life, isMove, onGround;
 
 	sf::Texture texture;
 	sf::Sprite sprite;
-	sf::String name, type;
+	sf::String name;
 	
 	sf::FloatRect getRect() {//ф-ция получения прямоугольника. его коорд,размеры (шир,высот).
 		return sf::FloatRect(x, y, w, h);//эта ф-ция нужна для проверки столкновений 
@@ -45,7 +45,7 @@ public:
 class Player : private Entity
 {
 public:
-	Player(sf::Image& image, sf::String Name, sf::String Type, TileMap* lev, float x, float y, int w, int h, int mp, int hp, int str, int dex, int integ) : Entity(image, Name, Type, x, y, w, h) {
+	Player(sf::Image& image, sf::String Name, TileMap* lev, float x, float y, int w, int h, int mp, int hp, int str, int dex, int integ) : Entity(image, Name, x, y, w, h) {
 		this->hp = hp; this->mp = mp; this->integer = integ; this->dex = dex; this->maxmp = 17 * integer - 3 * this->str; this->maxhp = 35 * this->str + 6 * this->dex;
 		objects = lev->getAllObjects();
 	}
@@ -153,7 +153,7 @@ private:
 class NPC : private Entity
 {
 public:
-	NPC(sf::Image& image, sf::String Name, sf::String Type, TileMap* lev, float x, float y, int w, int h, int mp, int hp, int str, int dex, int integ) : Entity(image, Name, Type, x, y, w, h) {
+	NPC(sf::Image& image, sf::String Name, sf::String Type, TileMap* lev, float x, float y, int w, int h, int mp, int hp, int str, int dex, int integ) : Entity(image, Name, x, y, w, h) {
 
 	}
 

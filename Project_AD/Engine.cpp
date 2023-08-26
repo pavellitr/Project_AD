@@ -21,7 +21,7 @@ Engine::Engine(sf::RenderWindow* window) {
 
 	Object player = levels->BringLevel(1)->getObject("player");
 
-	p = new Player (heroImage, "Player1", "Player", levels->BringLevel(1), player.GetX(), player.GetY(), 40, 40, 100, 100, 5, 10, 25);
+	p = new Player (heroImage, "Player1", levels->BringLevel(1), player.GetX(), player.GetY(), 40, 40, 100, 100, 5, 10, 25);
 	
 
 }
