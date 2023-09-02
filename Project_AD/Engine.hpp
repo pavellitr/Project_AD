@@ -4,7 +4,7 @@
 #include "Button.hpp"
 #include "Player.hpp"
 #include "Level_buffer.hpp"
-#include "Items.hpp"
+
 #include <vector>
 
 
@@ -43,7 +43,7 @@ private:
 	float time;
 
 	void input(sf::Clock* clock);
-	void update();
+	void update(float time);
 	void draw();
 
 	///////////////////////////////PAUSE

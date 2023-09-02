@@ -30,6 +30,9 @@ public:
 	Object* ItemObject;
 
 	int ItemID;
+
+	int hp = 0, maxhp = 0, maxmp = 0, mp = 0, str = 0, dex = 0, integer = 0;
+
 	bool PickUped = false;
 
 	sf::Texture texture;
@@ -43,10 +46,14 @@ public:
 	sf::FloatRect getRect() {
 		return sf::FloatRect(x, y, w, h);
 	}
-	
+
 	virtual	sf::Sprite* getSprite() {
 
 		return sprite;
+	}
+
+	int  getID() {
+		return ItemID;
 	}
 	virtual void update() = 0;
 	
@@ -58,7 +65,7 @@ public:
 	ItemStatsUp(Object obj, int ID, TileMap* lvl) : Item(obj, ID, lvl) {
 		this->ItemID = ID;
 		
-	 Objects = lvl->getAllObjects();
+	// Objects = lvl->getAllObjects();
 
 		switch (ItemID)
 		{
@@ -66,7 +73,7 @@ public:
 		}
 
 	}
-	int hp = 0, maxhp = 0, maxmp = 0, mp = 0, str = 0, dex = 0, integer = 0;
+	
 	
 
 	void update() {
@@ -80,8 +87,15 @@ private:
 
 };
 class ItemActive : public Item {
+public:
+	ItemActive(Object obj, int ID, TileMap* lvl) : Item(obj, ID, lvl) {
+
+	}
+
+		void update() {
 
 
+	}
 
 };
 

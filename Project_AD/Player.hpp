@@ -57,7 +57,7 @@ public:
 
 	Player(sf::Image& image, sf::String Name, std::list<Item*> items , TileMap* lev, float x, float y, int w, int h, int mp, int hp, int str, int dex, int integ) : Entity(image, Name, x, y, w, h) {
 
-		this->hp = hp; this->mp = mp; this->integer = integ; this->dex = dex; this->maxmp = 17 * integer - 3 * this->str; this->maxhp = 35 * this->str + 6 * this->dex;
+		this->hp = hp; this->mp = mp; this->str = str; this->integer = integ; this->dex = dex; this->maxmp = 17 * integer - 3 * this->str; this->maxhp = 35 * this->str + 6 * this->dex;
 		if (hp > maxhp) {
 			hp = maxhp;
 		}
@@ -141,18 +141,16 @@ public:
 	}
 
 
-	void PickUpItemStatsUP(int ID) {
-		switch (ID)
-		{
-		case 1:if((hp + 50) >= maxhp) { hp = maxhp; }
-			   if ((hp + 50) < maxhp) { hp = hp+50; }
-			     
-			  
-			  break;
-
-
-
-		}
+	void PickUpItemStatsUP(Item* Item) {
+		int id = Item->getID();
+		if (Item->hp + hp > maxhp)  hp = maxhp;
+		else this->hp = Item->hp+hp;
+		if (Item->mp + mp > maxmp) mp = maxmp;
+		else this->mp = mp + Item->mp;
+		this->integer = integer+Item->integer;
+		this->str = str + Item->str;
+		this->dex = dex+Item->dex;
+		std::cout << hp << std::endl;
 		
 
 	}
