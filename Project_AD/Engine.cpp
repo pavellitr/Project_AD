@@ -52,39 +52,12 @@ void Engine::start() {
 			if (p->getIsShoot() == true && CD > 500) {
 				p->setIsShoot(false); entities.push_back(new Bullet(bulletImage, "Bullet", levels->BringLevel(1), p->getX(), p->getY(), 16, 16, p->getState()));
 				CDTimer.restart();
-
-			}
-			for (it = entities.begin(); it != entities.end();)
-			{
-				Entity* b = *it;
-				b->update(time);
-				if (b->life == false) { it = entities.erase(it); delete b; }
-				else it++;
-			}	
-
-			p->update(time);
-
-			for (itItem = Items.begin(); itItem != Items.end();)
-			{
-				Item* d = *itItem;
-				if (d->PickUped==true) {
-					
-					if (d->ItemID < 10) {  
-						p->PickUpItemStatsUP(d->ItemID);
-					}
-					
-					itItem = Items.erase(itItem); delete d;
-
-				}
-				else itItem++;
-
-
 			}
 			
-			
+			update(time);
+		
 
-			
-			
+		
 		}
 
 
@@ -97,8 +70,31 @@ void Engine::start() {
 }
 
 
-void Engine::update() {
+void Engine::update(float time) {
+
+
+	for (it = entities.begin(); it != entities.end();)
+	{
+		Entity* b = *it;
+		b->update(time);
+		if (b->life == false) { it = entities.erase(it); delete b; }
+		else it++;
+	}
+
 	p->update(time);
+
+	for (itItem = Items.begin(); itItem != Items.end();)
+	{
+		Item* d = *itItem;
+		if (d->PickUped == true) {
+
+			if (d->ItemID < 10) {
+				p->PickUpItemStatsUP(d);
+			}
+			itItem = Items.erase(itItem); delete d;
+		}
+		else itItem++;
+	}
 
 }
 void Engine::draw() {

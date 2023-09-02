@@ -63,7 +63,7 @@
   <object id="24" name="solid" x="288.667" y="895.333" width="94.6667" height="30.6667"/>
   <object id="45" name="Item" x="741" y="925" width="30" height="30">
    <properties>
-    <property name="ID" value="1"/>
+    <property name="ID" value="20"/>
    </properties>
   </object>
   <object id="54" name="Item" x="786" y="925" width="30" height="30">
